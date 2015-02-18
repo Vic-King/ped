@@ -14,5 +14,7 @@ HEADERS += \
     DisplayModel.h \
     DistanceToPoint.h \
     IDataConversion.h \
-    IReconstruction.h
+    IReconstruction.h \
+    point.h
 
+INCLUDEPATH += /net/cremi/algirard/espaces/travail/PED/glm/
