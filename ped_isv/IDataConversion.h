@@ -16,7 +16,8 @@
 class IDataConversion
 {
 public:
-    IDataConversion();
+    IDataConversion() {};
+
 };
 
 #endif // IDATACONVERSION_H

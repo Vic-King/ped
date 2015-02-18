@@ -7,9 +7,6 @@ using namespace std;
 
 int main()
 {
-    IDataConversion conv;
-    DisplayModel disp;
-
 
     return 0;
 }
