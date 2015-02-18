@@ -1,4 +1,4 @@
-#include "distancetopoint.h"
+#include "DistanceToPoint.h"
 
 DistanceToPoint::DistanceToPoint()
 {

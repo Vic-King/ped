@@ -1,7 +1,9 @@
 #ifndef DISTANCETOPOINT_H
 #define DISTANCETOPOINT_H
 
-class DistanceToPoint
+#include "IDataConversion.h"
+
+class DistanceToPoint : public IDataConversion
 {
 public:
     DistanceToPoint();
