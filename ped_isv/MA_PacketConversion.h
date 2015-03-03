@@ -47,4 +47,15 @@ class MA_PacketConversion : IDataConversion
 	}
 };
 
+
+/*
+ * Particle::Update(float dt)
+{
+    Accel = vec3(0, 0, -9.81);
+    vec3 OldVel = Vel;
+    Vel = Vel + Accel * dt;
+    Pos = Pos + (OldVel + Vel) * 0.5 * dt;
+}
+*/
+
 #endif
