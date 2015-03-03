@@ -13,6 +13,8 @@
 #ifndef IDATACONVERSION_H
 #define IDATACONVERSION_H
 
+#include "Point.h"
+
 class IDataConversion
 {
 public:
