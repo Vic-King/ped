@@ -5,7 +5,8 @@ CONFIG -= qt
 
 SOURCES += main.cpp \
     DisplayModel.cpp \
-    DistanceToPoint.cpp
+    DistanceToPoint.cpp \
+    VEFModel.cpp
 
 include(deployment.pri)
 qtcAddDeployment()
@@ -15,6 +16,9 @@ HEADERS += \
     DistanceToPoint.h \
     IDataConversion.h \
     IReconstruction.h \
-    point.h
+    point.h \
+    MA_PacketConversion.h \
+    VEFModel.h \
+    Point.h
 
 INCLUDEPATH += /net/cremi/algirard/espaces/travail/PED/glm/

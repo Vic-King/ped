@@ -5,26 +5,28 @@
 #include "Point.h"
 #include "VEFModel.h"
 
+#include <glm/glm.hpp>
+
 using namespace std;
 
-void raytrace(/*glm::vec3 ori, glm::vec3 dir*/);
-bool move(/*position, orientation, direction*/);
+void raytrace(glm::vec3 ori, glm::vec3 dir);
+bool move(glm::vec3 position, glm::vec3 orientation, glm::vec3 direction);
 
 struct robot {
-    /*glm::vec3 position(x, y, z);
-    glm::vec3 orientation(x, y, z);
-    glm::vec3 direction(x, y, z);*/
+    glm::vec3 position;
+    glm::vec3 orientation;
+    glm::vec3 direction;
 };
 
 int main() {
     // CONFIG
     unsigned int nbRay = 180;
-    struct robot WallE;
+    robot WallE;
 
     bool stop = false;
     std::vector<Point> pointCloud;
 
-   Point curPoint;
+   //Point curPoint;
 
     // TEST MODE
     VEFModel obj;
@@ -32,28 +34,28 @@ int main() {
 
     while (!stop) {
 
-        for (int i = 0; i < nbRay; ++i) {
+        for (unsigned int i = 0; i < nbRay; ++i) {
 
             // TEST MODE
-            raytrace();
+            //raytrace();
 
             // NORMAL MODE
             // get drone data
 
-            WallE.move(/*glm::vec3 accPos, glm::vec3 accOri, glm::vec3 accDir*/);
+            //WallE.move(glm::vec3 accPos, glm::vec3 accOri, glm::vec3 accDir);
         }
 
-        stop = !move(/*position, direction*/);
+        //stop = !move(position, direction);
     }
 
     return 0;
 }
 
-void raytrace(/*glm::vec3 ori, glm::vec3 dir*/) {
+void raytrace(glm::vec3 ori, glm::vec3 dir) {
 
 }
 
-bool move(/*glm::vec3 accPos, glm::vec3 accOri, glm::vec3 accDir*/) {
+bool move(glm::vec3 accPos, glm::vec3 accOri, glm::vec3 accDir) {
     /*position += accPos;
     orientation += accOri;
     direction += accDir;*/
