@@ -3,3 +3,7 @@
 RawData::RawData()
 {
 }
+
+Point RawData::convertPacket(/*packet*/) {
+
+}
