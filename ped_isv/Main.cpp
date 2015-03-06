@@ -9,6 +9,7 @@ int main() {
 
     Scene *scene = new Scene ();
     scene->init();
+    scene->update();
 
     return 0;
 }

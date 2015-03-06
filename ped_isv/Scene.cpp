@@ -18,13 +18,23 @@ void Scene::draw () {
 
 void Scene::update () {
 
-    //WaitPacket
+    m_continue = true;
 
-    Point p = m_rawData->convertPacket(/*packet*/);
+    while (continue){
 
-    m_pointCloud->addPoint(p);
+        doEvent ();
+
+        //WaitPacket
+
+        Point p = m_rawData->convertPacket(/*packet*/);
+
+        m_pointCloud->addPoint(p);
+    }
 }
 
+void doEvent () {
+
+}
 
 //void ViewWindow::initialize()
 //{
