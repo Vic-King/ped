@@ -86,5 +86,5 @@ RawData::getPosition(float dt)
     glm::vec3 oldVel = m_Velocity;
     m_Velocity.x = m_Velocity.x + m_Acceleration.x * dt;
     m_Velocity.z = m_Velocity.z + m_Acceleration.z * dt;
-    m_Position = m_Position + (oldVel + m_Velocity) * 0.5 * dt;
+    m_Position = m_Position + (oldVel + m_Velocity) * 0.5f * dt;
 }
