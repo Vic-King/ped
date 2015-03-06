@@ -1,21 +1,28 @@
-OTHER_FILES += \
-    deployment.pri \
-    ped_isv.pro.user
+TEMPLATE = app
+CONFIG += console
+CONFIG -= app_bundle
+CONFIG -= qt
+
+include(deployment.pri)
+qtcAddDeployment()
+
+
+
+INCLUDEPATH += /net/cremi/algirard/espaces/travail/PED/glm/
 
 HEADERS += \
-    MA_PacketConversion.h \
     Point.h \
-    VEFModel.h \
-    Scene.h \
+    PointCloud.h \
     RawData.h \
-    PointCloud.h
+    Scene.h \
+    VEFModel.h \
+    Packet.h \
+    MA_PacketConversion.h
 
 SOURCES += \
-    VEFModel.cpp \
-    Point.cpp \
     Main.cpp \
-    Scene.cpp \
+    Point.cpp \
+    PointCloud.cpp \
     RawData.cpp \
-    PointCloud.cpp
-
-INCLUDEPATH += /net/cremi/vfrancoi/espaces/travail/M2/S4/ped/glm
+    Scene.cpp \
+    VEFModel.cpp
