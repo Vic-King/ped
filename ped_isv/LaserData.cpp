@@ -1,4 +1,4 @@
-#include "laserdata.h"
+#include "LaserData.h"
 #include <math.h>
 #include "Point.h"
 
@@ -6,7 +6,7 @@ LaserData::LaserData()
 {
 }
 
-Point convert(float dist, glm::vec3 pos, int angle, int initAngle){
+Point LaserData::convert(float dist, glm::vec3 pos, int angle, int initAngle){
 
 
     float x = dist * cos(initAngle - angle) * cos(0);
