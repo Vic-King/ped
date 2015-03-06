@@ -3,6 +3,7 @@
 
 #include "PointCloud.h"
 #include "RawData.h"
+#include "LaserData.h"
 
 class Scene
 {
@@ -15,6 +16,7 @@ public:
 private:
     PointCloud *m_pointCloud;
     RawData *m_rawData;
+    LaserData *m_laserdata;
 };
 
 #endif // SCENE_H

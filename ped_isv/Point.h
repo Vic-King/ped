@@ -6,9 +6,9 @@
 class Point
 {
 public:
-    Point(glm::vec3 position, glm::vec3 normal) : m_Position(position), m_Normal(normal) {}
+    Point(glm::vec3 position, glm::vec3 normal);
     
-    Point(float x, float y, float z, float nx, float ny, float nz) : m_Position(x,y,z), m_Normal(nx, ny, nz) {}
+    Point(float x, float y, float z, float nx, float ny, float nz);
 
 private:
     glm::vec3 m_Position, m_Normal;

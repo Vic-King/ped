@@ -1,6 +1,10 @@
 #include "Scene.h"
 #include "PointCloud.h"
 #include "Point.h"
+#include "LaserData.h"
+#include <fstream>
+
+using namespace std;
 
 Scene::Scene() {
 
@@ -9,7 +13,35 @@ Scene::Scene() {
 void Scene::init () {
 
     m_pointCloud = new PointCloud ();
+    m_laserdata = new LaserData();
+    int initAngle = 210;
+
+
+
+    //Lecture du fichier
+    ifstream fichier("Objects/TestFile.txt", ios::in);
+
+    if(fichier)
+        {
+            //string d, px, py, pz, a;
+            float dist = 0.0;
+            glm::vec3 pos = glm::vec3(0.0f);
+            int angle=0;
+            string ligne;
+            while ( std::getline( fichier, ligne ) )
+                {
+                    ligne >> pos.x >> pos.y >> pos.z >> angle >> dist;
+                    Point p = LaserData.convert(dist, pos, angle, initAngle);
+                    m_pointCloud->addPoint(p);
+                }
+
+               fichier.close();
+        }
+        else
+               cerr << "Impossible d'ouvrir le fichier !" << endl;
 }
+
+
 
 void Scene::draw () {
 
