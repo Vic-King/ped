@@ -9,7 +9,6 @@ Scene::Scene() {
 void Scene::init () {
 
     m_pointCloud = new PointCloud ();
-    m_rawData = new RawData ();
 }
 
 void Scene::draw () {
@@ -18,23 +17,13 @@ void Scene::draw () {
 
 void Scene::update () {
 
-    m_continue = true;
+    //WaitPacket
 
-    while (continue){
+    //Point p = m_rawData->convertPacket(/*packet*/);
 
-        doEvent ();
-
-        //WaitPacket
-
-        Point p = m_rawData->convertPacket(/*packet*/);
-
-        m_pointCloud->addPoint(p);
-    }
+    //m_pointCloud->addPoint(p);
 }
 
-void doEvent () {
-
-}
 
 //void ViewWindow::initialize()
 //{
