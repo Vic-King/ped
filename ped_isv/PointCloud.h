@@ -9,7 +9,11 @@ class PointCloud
 public:
     PointCloud();
     void addPoint(Point p);
-    void delPoint(Point p);
+    void addPoint(Point p, int pos);
+    void delPoint();
+    void delPoint(int pos);
+    Point getPoint(int pos);
+    unsigned int getSize() ;
 
 private:
     std::vector<Point> listPoints;
