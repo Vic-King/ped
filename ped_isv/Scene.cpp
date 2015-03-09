@@ -3,6 +3,8 @@
 #include "Point.h"
 #include "LaserData.h"
 #include <fstream>
+#include <iostream>
+
 
 using namespace std;
 
@@ -19,7 +21,7 @@ void Scene::init () {
 
 
     //Lecture du fichier
-    ifstream fichier("Objects/TestFile.txt", ios::in);
+    ifstream fichier("/net/travail/bordelahiguera/MASTER2/ped/ped_isv/Objects", ios::in);
 
     if(fichier)
         {
@@ -28,10 +30,12 @@ void Scene::init () {
             glm::vec3 pos = glm::vec3(0.0f);
             int angle=0;
             string ligne;
-            while ( std::getline( fichier, ligne ) )
+
+            while ( getline(fichier, ligne))
                 {
-                    ligne >> pos.x >> pos.y >> pos.z >> angle >> dist;
-                    Point p = LaserData.convert(dist, pos, angle, initAngle);
+                     fichier >> pos.x >> pos.y >> pos.z >> angle >> dist;
+                   //ligne >> pos.x >> pos.y >> pos.z >> angle >> dist;
+                    Point p = m_laserdata->convert(dist, pos, angle, initAngle);
                     m_pointCloud->addPoint(p);
                 }
 
@@ -47,14 +51,14 @@ void Scene::draw () {
 
 }
 
-void Scene::update () {
+//void Scene::update () {
 
-    //WaitPacket
+//WaitPacket
 
-    //Point p = m_rawData->convertPacket(/*packet*/);
+//Point p = m_rawData->convertPacket(/*packet*/);
 
-    //m_pointCloud->addPoint(p);
-}
+//m_pointCloud->addPoint(p);
+//}
 
 
 //void ViewWindow::initialize()
@@ -88,7 +92,7 @@ void Scene::update () {
 //    m_posAttr = m_program->attributeLocation("posAttr");
 //    m_colAttr = m_program->attributeLocation("colAttr");
 //    m_matrixUniform = m_program->uniformLocation("matrix");
-//}
+
 
 
 //const std::string ViewWindow::vertexShaderSource =
@@ -118,8 +122,8 @@ void Scene::update () {
 
 //    QMatrix4x4 matrix;
 //    matrix.perspective(60.0f, 4.0f/3.0f, 0.1f, 100.0f);
-//    //matrix.translate(m_camera.position.x(), m_camera.position.y(), m_camera.position.z());
-//    //matrix.rotate(50.0f * m_frame / screen()->refreshRate(), 0, 1, 0);
+//    matrix.translate(m_camera.position.x(), m_camera.position.y(), m_camera.position.z());
+//    matrix.rotate(50.0f * m_frame / screen()->refreshRate(), 0, 1, 0);
 
 //    m_program->setUniformValue(m_matrixUniform, matrix);
 
@@ -139,7 +143,7 @@ void Scene::update () {
 //}
 //int main(int argc, char **argv)
 //{
-//    QGuiApplication app(argc, argv);
+//  QGuiApplication app(argc, argv);
 //    QSurfaceFormat format;
 //    format.setSamples(16);
 //    ViewWindow window;
