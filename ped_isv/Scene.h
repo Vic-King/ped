@@ -5,6 +5,7 @@
 #include "RawData.h"
 #include "LaserData.h"
 
+
 class Scene
 {
 public:
