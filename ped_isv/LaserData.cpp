@@ -2,21 +2,25 @@
 #include <math.h>
 #include "Point.h"
 
+#define M_PI       3.14159265358979323846
+
 LaserData::LaserData()
 {
 }
 
-Point LaserData::convert(float dist, glm::vec3 pos, int angle, int initAngle){
+Point LaserData::convert(float dist, glm::vec3 pos, float angle, float initAngle){
 
+    //float theta = 90.f;
+    float phi = initAngle + angle;
+    phi *= M_PI / 180.f;
+    float x = (0.1*dist) * cosf(phi);
+    float y = (0.1*dist) * sinf(phi);
 
-    float x = dist * cos(initAngle - angle) * cos(0);
-    float y = dist * sin(initAngle - angle);
-    float z = dist * cos(initAngle - angle) * sin(0);
+    glm::vec3 position(x, y, pos.z);
 
-    glm::vec3 position(x,y,z);
-
-    glm::vec3 normal(pos.x - position.x, pos.y - position.y, pos.z - position.z);
+    glm::vec3 normal(x - pos.x, y - pos.y, position.z - pos.z);
 
 
     Point p(position, normal);
+    return p;
 }

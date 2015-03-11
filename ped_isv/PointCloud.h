@@ -12,8 +12,8 @@ public:
     void addPoint(Point p, int pos);
     void delPoint();
     void delPoint(int pos);
-    Point getPoint(int pos);
-    unsigned int getSize() ;
+    Point getPoint(int pos) const;
+    unsigned int getSize() const;
 
 private:
     std::vector<Point> listPoints;

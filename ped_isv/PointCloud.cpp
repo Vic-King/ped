@@ -20,10 +20,10 @@ void PointCloud::delPoint(int pos) {
     listPoints.erase(listPoints.begin() + pos);
 }
 
-Point PointCloud::getPoint(int pos) {
+Point PointCloud::getPoint(int pos) const {
     return listPoints.at(pos);
 }
 
-unsigned int PointCloud::getSize() {
+unsigned int PointCloud::getSize() const {
     return listPoints.size();
 }

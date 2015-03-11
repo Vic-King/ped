@@ -14,6 +14,8 @@ public:
     void draw ();
     void update ();
 
+    const PointCloud* getPointCloud() {return m_pointCloud;}
+
 private:
     PointCloud *m_pointCloud;
     RawData *m_rawData;
