@@ -21,7 +21,8 @@ void Scene::init () {
 
 
     //Lecture du fichier
-    ifstream fichier("Data/objet1.txt", ios::in);
+    //ifstream fichier("Data/objet1.txt", ios::in);
+    ifstream fichier("Data/TestRobotFixe.txt", ios::in);
 
     if(fichier)
     {
@@ -32,8 +33,8 @@ void Scene::init () {
         string ligne;
 
         do{
-            fichier >> angle >> dist;
-            //fichier >> pos.x >> pos.y >> pos.z >> angle >> dist;
+            //fichier >> angle >> dist;
+            fichier >> pos.x >> pos.y >> pos.z >> angle >> dist;
             //std::cout << pos.x << " " << pos.y << " " << pos.z << " " << angle << " " << dist << std::endl;
             //ligne >> pos.x >> pos.y >> pos.z >> angle >> dist;
             Point p = m_laserdata->convert(dist, pos, angle, initAngle);
