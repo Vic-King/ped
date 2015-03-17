@@ -1,5 +1,7 @@
 #include "ViewWindow.h"
-
+#include "LaserData.h"
+#include <iostream>
+#include <fstream>
 
 void ViewWindow::mouseReleaseEvent(QMouseEvent *releaseEvent)
 {
@@ -45,8 +47,6 @@ void ViewWindow::wheelEvent(QWheelEvent *event)
 
 void ViewWindow::initialize()
 {
-    m_Scene->init();
-
     glPointSize(2.f);
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
@@ -56,14 +56,16 @@ void ViewWindow::initialize()
     srand(time(NULL));
     m_UpdateRender = true;
 
-    unsigned int cloudSize = m_Scene->getPointCloud()->getSize();
+    testFile("TestDroneFixe.txt");
+
+    unsigned int cloudSize = m_PointCloud->getSize();
     m_Data = new float6[cloudSize];
     float6 val;
 
     for(unsigned int i = 0; i < cloudSize; ++i) {
-        val.x = m_Scene->getPointCloud()->getPoint(i).m_Position.x;
-        val.y = m_Scene->getPointCloud()->getPoint(i).m_Position.y;
-        val.z = m_Scene->getPointCloud()->getPoint(i).m_Position.z;
+        val.x = m_PointCloud->getPoint(i).m_Position.x;
+        val.y = m_PointCloud->getPoint(i).m_Position.y;
+        val.z = m_PointCloud->getPoint(i).m_Position.z;
 
         std::cerr << "x : " << val.x << " y : " << val.y << " z : " << val.z << std::endl;
 
@@ -142,7 +144,7 @@ void ViewWindow::render()
         glVertexAttribPointer(m_colAttr, 3, GL_FLOAT, GL_FALSE, sizeof(float6), (const void*)offset);
         m_program->setUniformValue(m_matrixUniform, m_MVPMatrix);
         m_program->setUniformValue(m_zoomUniform, m_ZoomFactor);
-        glDrawArrays(GL_POINTS, 0, m_Scene->getPointCloud()->getSize());
+        glDrawArrays(GL_POINTS, 0, m_PointCloud->getSize());
         //glDrawArrays(GL_POINTS, 0, 3);
 
         m_program->disableAttributeArray("colAttr");
@@ -152,4 +154,35 @@ void ViewWindow::render()
         m_program->release();
     //}
 
+}
+
+void
+ViewWindow::testFile(const std::string filename)
+{
+
+    //Lecture du fichier
+    std::string path("Data/"+filename);
+    std::ifstream fichier(path.c_str(), std::ios::in);
+
+    if(fichier)
+    {
+        float initAngle = 180.f;
+        float dist = 0.0f;
+        glm::vec3 pos = glm::vec3(0.0f);
+        float angle = 0.f;
+        std::string ligne;
+
+        do{
+            //fichier >> angle >> dist;
+            fichier >> pos.x >> pos.y >> pos.z >> angle >> dist;
+            Point p = m_LaserData.convert(dist, pos, angle, initAngle);
+            m_PointCloud->addPoint(p);
+
+        }while( getline(fichier, ligne));
+
+        fichier.close();
+    }else
+    {
+        std::cerr << "Impossible d'ouvrir le fichier !" << std::endl;
+    }
 }

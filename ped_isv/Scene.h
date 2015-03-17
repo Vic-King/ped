@@ -15,6 +15,7 @@ public:
     void update ();
 
     const PointCloud* getPointCloud() {return m_pointCloud;}
+    void addPoint(/*socket*/);
 
 private:
     PointCloud *m_pointCloud;

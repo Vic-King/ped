@@ -17,13 +17,14 @@
 
 #include "openglwindow.hpp"
 
-#include "Scene.h"
+#include "PointCloud.h"
+#include "LaserData.h"
 
 class ViewWindow : public OpenGLWindow
 {
 public:
-    ViewWindow() : m_VertexBuffer(QOpenGLBuffer::VertexBuffer), m_Scene(new Scene()) {}
-    ~ViewWindow(){delete m_Data;}
+    ViewWindow() : m_VertexBuffer(QOpenGLBuffer::VertexBuffer), m_PointCloud(new PointCloud()) {}
+    ~ViewWindow(){delete m_Data; delete m_PointCloud;}
 
     void initialize();
     void render();
@@ -49,10 +50,13 @@ private:
     void mouseReleaseEvent(QMouseEvent *releaseEvent);
     void wheelEvent(QWheelEvent *event);
 
+    void testFile(const std::string filename);
+
     static const std::string vertexShaderSource;
     static const std::string fragmentShaderSource;
 
-    Scene* m_Scene;
+    PointCloud* m_PointCloud;
+    LaserData m_LaserData;
 
     GLuint m_posAttr;
     GLuint m_colAttr;

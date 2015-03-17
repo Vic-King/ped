@@ -6,7 +6,7 @@
 class LaserData
 {
 public:
-    LaserData();
+    LaserData() {}
     Point convert(float dist, glm::vec3 pos, float angle, float initAngle);
 };
 
