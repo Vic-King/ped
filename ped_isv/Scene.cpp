@@ -16,7 +16,7 @@ void Scene::init () {
 
     m_pointCloud = new PointCloud ();
     m_laserdata = new LaserData();
-    float initAngle = 270.f;
+    float initAngle = 180.f;
 
 
 
