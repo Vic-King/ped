@@ -2,6 +2,8 @@
 #include "LaserData.h"
 #include <iostream>
 #include <fstream>
+#include <boost/timer.hpp>
+
 
 void ViewWindow::mouseReleaseEvent(QMouseEvent *releaseEvent)
 {
@@ -56,30 +58,6 @@ void ViewWindow::initialize()
     srand(time(NULL));
     m_UpdateRender = true;
 
-    testFile("TestDroneFixe.txt");
-
-    unsigned int cloudSize = m_PointCloud->getSize();
-    m_Data = new float6[cloudSize];
-    float6 val;
-
-    for(unsigned int i = 0; i < cloudSize; ++i) {
-        val.x = m_PointCloud->getPoint(i).m_Position.x;
-        val.y = m_PointCloud->getPoint(i).m_Position.y;
-        val.z = m_PointCloud->getPoint(i).m_Position.z;
-
-        std::cerr << "x : " << val.x << " y : " << val.y << " z : " << val.z << std::endl;
-
-        val.r = 1.f;
-        val.g = 0.f;
-        val.b = 0.f;
-
-        m_Data[i] = val;
-    }
-
-    glGenBuffers(1, &m_VertexBuffer);
-    glBindBuffer(GL_ARRAY_BUFFER, m_VertexBuffer);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(float6) * cloudSize, m_Data, GL_STATIC_DRAW);
-
     m_program = new QOpenGLShaderProgram(this);
     m_program->addShaderFromSourceCode(QOpenGLShader::Vertex, vertexShaderSource.c_str());
     m_program->addShaderFromSourceCode(QOpenGLShader::Fragment, fragmentShaderSource.c_str());
@@ -100,6 +78,33 @@ void ViewWindow::initialize()
 
 
     m_ZoomFactor = 1.f;
+
+    m_Timer.restart();
+    testFile("objet1.txt");
+
+    unsigned int cloudSize = m_PointCloud->getSize();
+    m_Data = new float6[cloudSize];
+    float6 val;
+
+    for(unsigned int i = 0; i < cloudSize; ++i) {
+        val.x = m_PointCloud->getPoint(i).m_Position.x;
+        val.y = m_PointCloud->getPoint(i).m_Position.y;
+        val.z = m_PointCloud->getPoint(i).m_Position.z;
+
+        //std::cerr << "x : " << val.x << " y : " << val.y << " z : " << val.z << std::endl;
+
+        val.r = 1.f;
+        val.g = 0.f;
+        val.b = 0.f;
+
+        m_Data[i] = val;
+    }
+
+    glGenBuffers(1, &m_VertexBuffer);
+    glBindBuffer(GL_ARRAY_BUFFER, m_VertexBuffer);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(float6) * cloudSize, m_Data, GL_STATIC_DRAW);
+
+
 }
 
 
@@ -152,6 +157,8 @@ void ViewWindow::render()
         glBindBuffer(GL_ARRAY_BUFFER, 0);
 
         m_program->release();
+        std::cerr << "Elapsed time : " << m_Timer.elapsed() << std::endl;
+        m_Timer.restart();
     //}
 
 }
@@ -164,6 +171,10 @@ ViewWindow::testFile(const std::string filename)
     std::string path("Data/"+filename);
     std::ifstream fichier(path.c_str(), std::ios::in);
 
+
+
+
+
     if(fichier)
     {
         float initAngle = 180.f;
@@ -172,14 +183,16 @@ ViewWindow::testFile(const std::string filename)
         float angle = 0.f;
         std::string ligne;
 
+        unsigned int cpt = 0;
         do{
             //fichier >> angle >> dist;
             fichier >> pos.x >> pos.y >> pos.z >> angle >> dist;
             Point p = m_LaserData.convert(dist, pos, angle, initAngle);
             m_PointCloud->addPoint(p);
-
+            ++cpt;
         }while( getline(fichier, ligne));
 
+        std::cerr << "N° of points : " << cpt << std::endl;
         fichier.close();
     }else
     {

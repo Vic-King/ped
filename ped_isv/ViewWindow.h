@@ -19,6 +19,7 @@
 
 #include "PointCloud.h"
 #include "LaserData.h"
+#include <boost/timer.hpp>
 
 class ViewWindow : public OpenGLWindow
 {
@@ -57,6 +58,8 @@ private:
 
     PointCloud* m_PointCloud;
     LaserData m_LaserData;
+    boost::timer m_Timer;
+
 
     GLuint m_posAttr;
     GLuint m_colAttr;
