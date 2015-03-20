@@ -9,7 +9,8 @@ void PointCloud::addPoint(Point p) {
 }
 
 void PointCloud::addPoint(Point p, int pos) {
-    listPoints.insert(listPoints.begin() + pos, p);
+    //listPoints.insert(listPoints.begin() + pos, p);
+    listPoints[pos] = p;
 }
 
 void PointCloud::delPoint() {

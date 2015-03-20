@@ -9,7 +9,7 @@ Point LaserData::convert(float dist, glm::vec3 pos, float angle, float initAngle
     float phi = initAngle + angle;
     phi *= M_PI / 180.f;
     float x = -(dist * cosf(phi));
-    float y = dist * sinf(phi);
+    float y = -(dist * sinf(phi));
 
     glm::vec3 position(x, y, pos.z);
     glm::vec3 normal(x - pos.x, y - pos.y, position.z - pos.z);

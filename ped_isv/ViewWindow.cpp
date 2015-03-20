@@ -3,6 +3,8 @@
 #include <iostream>
 #include <fstream>
 #include <boost/timer.hpp>
+#include <cstdlib>
+#include <ctime>
 
 
 void ViewWindow::mouseReleaseEvent(QMouseEvent *releaseEvent)
@@ -80,9 +82,10 @@ void ViewWindow::initialize()
     m_ZoomFactor = 1.f;
 
     m_Timer.restart();
-    testFile("objet1.txt");
+    //testFile("DistanceTest.txt");
 
     unsigned int cloudSize = m_PointCloud->getSize();
+
     m_Data = new float6[cloudSize];
     float6 val;
 
@@ -91,7 +94,7 @@ void ViewWindow::initialize()
         val.y = m_PointCloud->getPoint(i).m_Position.y;
         val.z = m_PointCloud->getPoint(i).m_Position.z;
 
-        //std::cerr << "x : " << val.x << " y : " << val.y << " z : " << val.z << std::endl;
+        std::cerr << "x : " << val.x << " y : " << val.y << " z : " << val.z << std::endl;
 
         val.r = 1.f;
         val.g = 0.f;
@@ -100,39 +103,43 @@ void ViewWindow::initialize()
         m_Data[i] = val;
     }
 
+
+
     glGenBuffers(1, &m_VertexBuffer);
     glBindBuffer(GL_ARRAY_BUFFER, m_VertexBuffer);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(float6) * cloudSize, m_Data, GL_STATIC_DRAW);
-
-
+    glBufferData(GL_ARRAY_BUFFER, sizeof(float6) * cloudSize, m_Data, GL_DYNAMIC_DRAW);
+    //estMaxPoint();
+    precisionTest();
+    //testFile("objet1.txt");
 }
 
 
 const std::string ViewWindow::vertexShaderSource =
-    "#version 330\n \
-    in vec3 posAttr;\n \
-    in vec3 colAttr;\n \
-    uniform float zoomFactor;\n\
-    out vec3 col;\n \
-    uniform mat4 matrix;\n \
-    void main() { \n\
-       col = colAttr;\n \
-        gl_Position = matrix * vec4(posAttr*zoomFactor, 1);\n \
-    }";
+        "#version 330\n \
+        in vec3 posAttr;\n \
+in vec3 colAttr;\n \
+uniform float zoomFactor;\n\
+out vec3 col;\n \
+uniform mat4 matrix;\n \
+void main() { \n\
+            col = colAttr;\n \
+            gl_Position = matrix * vec4(posAttr*zoomFactor, 1);\n \
+            }";
 
 //
 
 const std::string ViewWindow::fragmentShaderSource =
-    "#version 330\n \
-    in vec3 col;\n \
-    out vec4 color;\n \
-    void main() { \n\
-        color = vec4(col,1);\n \
-    }";
+        "#version 330\n \
+        in vec3 col;\n \
+out vec4 color;\n \
+void main() { \n\
+            color = vec4(col,1);\n \
+            }";
 
 void ViewWindow::render()
 {
     //if(m_UpdateRender){
+        m_Timer.restart();
         const qreal retinaScale = devicePixelRatio();
         glViewport(0, 0, width() * retinaScale, height() * retinaScale);
 
@@ -141,6 +148,7 @@ void ViewWindow::render()
         m_program->bind();
 
         glBindBuffer(GL_ARRAY_BUFFER, m_VertexBuffer);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(float6) * m_PointCloud->getSize(), m_Data, GL_DYNAMIC_DRAW);
         m_program->enableAttributeArray("posAttr");
         quintptr offset = 0;
         glVertexAttribPointer(m_posAttr, 3, GL_FLOAT, GL_FALSE, sizeof(float6), (const void*)offset);
@@ -157,8 +165,9 @@ void ViewWindow::render()
         glBindBuffer(GL_ARRAY_BUFFER, 0);
 
         m_program->release();
-        std::cerr << "Elapsed time : " << m_Timer.elapsed() << std::endl;
-        m_Timer.restart();
+        //std::cerr << "Elapsed time : " << m_Timer.elapsed() << std::endl;
+
+        //m_UpdateRender = false;
     //}
 
 }
@@ -171,10 +180,6 @@ ViewWindow::testFile(const std::string filename)
     std::string path("Data/"+filename);
     std::ifstream fichier(path.c_str(), std::ios::in);
 
-
-
-
-
     if(fichier)
     {
         float initAngle = 180.f;
@@ -185,8 +190,8 @@ ViewWindow::testFile(const std::string filename)
 
         unsigned int cpt = 0;
         do{
-            //fichier >> angle >> dist;
-            fichier >> pos.x >> pos.y >> pos.z >> angle >> dist;
+            fichier >> angle >> dist;
+            //fichier >> pos.x >> pos.y >> pos.z >> angle >> dist;
             Point p = m_LaserData.convert(dist, pos, angle, initAngle);
             m_PointCloud->addPoint(p);
             ++cpt;
@@ -198,4 +203,120 @@ ViewWindow::testFile(const std::string filename)
     {
         std::cerr << "Impossible d'ouvrir le fichier !" << std::endl;
     }
+}
+
+bool
+ViewWindow::testMaxPoint()
+{
+    m_Data = new float6[50000000];
+    float6 val;
+    val.r = 1.f;
+    val.g = 0.f;
+    val.b = 0.f;
+
+    const unsigned int pointPerFor = 10000000;
+
+    float initAngle = 180.f;
+    float dist = 0.f;
+    glm::vec3 pos = glm::vec3(0.0f);
+    float angle = 0.f;
+
+    dist = static_cast <float> (rand()) / (static_cast <float> (RAND_MAX/100.f));
+    angle = static_cast <float> (rand()) / (static_cast <float> (RAND_MAX/360.f));
+
+    m_Timer.restart();
+    unsigned int i = 0;
+
+    //for(; m_Timer.elapsed() < 0.2; ++i){
+    for(; ; ++i){
+
+        #pragma omp parallel for
+        for(int j = 0; j < pointPerFor; ++j)
+        {
+            Point p = m_LaserData.convert(dist, pos, angle, initAngle);
+            //m_PointCloud->addPoint(p);
+            val.x = p.m_Position.x;
+            val.y = p.m_Position.y;
+            val.z = p.m_Position.z;
+            m_Data[i*pointPerFor+j] = val;
+            dist = static_cast <float> (rand()) / (static_cast <float> (RAND_MAX/100.f));
+            angle = static_cast <float> (rand()) / (static_cast <float> (RAND_MAX/360.f));
+        }
+
+
+        m_Timer.restart();
+
+        const qreal retinaScale = devicePixelRatio();
+        glViewport(0, 0, width() * retinaScale, height() * retinaScale);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        m_program->bind();
+        glBindBuffer(GL_ARRAY_BUFFER, m_VertexBuffer);
+        //glBufferSubData(GL_ARRAY_BUFFER, sizeof(float6) * i*100000, sizeof(float6), &m_Data[i*100000]);
+        //glBufferData(GL_ARRAY_BUFFER, sizeof(float6) * m_PointCloud->getSize(), m_Data, GL_DYNAMIC_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(float6) * i * pointPerFor, m_Data, GL_DYNAMIC_DRAW);
+        m_program->enableAttributeArray("posAttr");
+        quintptr offset = 0;
+        glVertexAttribPointer(m_posAttr, 3, GL_FLOAT, GL_FALSE, sizeof(float6), (const void*)offset);
+        m_program->enableAttributeArray("colAttr");
+        offset += sizeof(float)*3;
+        glVertexAttribPointer(m_colAttr, 3, GL_FLOAT, GL_FALSE, sizeof(float6), (const void*)offset);
+        m_program->setUniformValue(m_matrixUniform, m_MVPMatrix);
+        m_program->setUniformValue(m_zoomUniform, m_ZoomFactor);
+        glDrawArrays(GL_POINTS, 0, m_PointCloud->getSize());
+        //glDrawArrays(GL_POINTS, 0, 3);
+
+        m_program->disableAttributeArray("colAttr");
+        m_program->disableAttributeArray("posAttr");
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+        m_program->release();
+        //std::cerr << "Elapsed time : " << m_Timer.elapsed() << std::endl;
+        std::cerr << "Nb of points : " << i*pointPerFor << std::endl;
+    }
+    std::cerr << "Elapsed time : " << m_Timer.elapsed() << std::endl;
+    std::cerr << "Nb of points : " << i*pointPerFor << std::endl;
+    render();
+}
+
+bool
+ViewWindow::LauchTests()
+{
+
+}
+
+bool
+ViewWindow::precisionTest()
+{
+    const unsigned int maxTest = 100;
+    const float LowX = -50.f;
+    const float LowY = -50.f;
+    const float HighX = 50.f;
+    const float HighY = 50.f;
+
+    float x,y;
+    float dist, angle;
+    for(unsigned int i = 0; i < maxTest; ++i)
+    {
+        x = LowX + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX/(HighX-LowX)));
+        y = LowY + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX/(HighY-LowY)));
+
+        dist = sqrtf((x*x)+(y*y));
+        angle = atanf(y/x);
+        angle *= 180.f / M_PI;
+
+        Point p = m_LaserData.convert(dist, glm::vec3(0,0,0), angle, 0.f);
+        float absX, absY;
+        absX = (x-p.m_Position.x);
+        absY = (y-p.m_Position.y);
+        absX = absX < 0.f ? -absX : absX;
+        absY = absY < 0.f ? -absY : absY;
+
+        std::cerr << std::setprecision(9) << "absX = " << absX << " & absY = " << absY << std::endl;
+        if(absX > 0.0001 || absY > 0.0001){
+            std::cerr << std::setprecision(9) << "[FAILED] Precision test failed at x = " << x << " & y = " << y << " || i = " << i << std::endl;
+            std::cerr << std::setprecision(9) << "Computed x = " << p.m_Position.x << " & y = " << p.m_Position.y << std::endl;
+            return false;
+        }
+    }
+    return true;
 }

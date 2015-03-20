@@ -52,6 +52,9 @@ private:
     void wheelEvent(QWheelEvent *event);
 
     void testFile(const std::string filename);
+    bool testMaxPoint();
+    bool precisionTest();
+    bool LauchTests();
 
     static const std::string vertexShaderSource;
     static const std::string fragmentShaderSource;
