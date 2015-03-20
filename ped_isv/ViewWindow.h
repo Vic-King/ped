@@ -51,10 +51,9 @@ private:
     void mouseReleaseEvent(QMouseEvent *releaseEvent);
     void wheelEvent(QWheelEvent *event);
 
-    void testFile(const std::string filename);
+    void testFile(const std::string filename, int fromPrototype);
     bool testMaxPoint();
     bool precisionTest();
-    bool LauchTests();
 
     static const std::string vertexShaderSource;
     static const std::string fragmentShaderSource;
